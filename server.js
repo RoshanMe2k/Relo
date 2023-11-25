@@ -6,6 +6,7 @@ const fs = require('fs');
 const app = express();
 const port = 3000;
 
+app.use(express.static(__dirname));
 // Set up storage for uploaded images
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
