@@ -2,9 +2,13 @@ const express = require('express');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const http = require('http');
+const socketIO = require('socket.io');
 
 const app = express();
 const port = 3000;
+const server = http.createServer(app);
+const io = socketIO(server);
 
 app.use(express.static(__dirname));
 // Set up storage for uploaded images
@@ -24,7 +28,18 @@ const storage = multer.diskStorage({
         cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
     }
 });
+io.on('connection', (socket) => {
+    console.log('A user connected');
 
+    // You can handle real-time events here
+    socket.on('chat-message', (message) => {
+        io.emit('chat-message', message); // Broadcast the message to all connected clients
+    });
+
+    socket.on('disconnect', () => {
+        console.log('User disconnected');
+    });
+});
 const upload = multer({ storage: storage });
 
 // Serve static files from the uploads directory
