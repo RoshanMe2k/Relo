@@ -1,3 +1,4 @@
+const socket = io();
 
 const app = new Vue({
     el: '#app',
@@ -29,6 +30,9 @@ const app = new Vue({
                 // Update the posts array with the new post
                 this.posts.push(data);
 
+                // Emit 'post-added' event to the server
+                socket.emit('post-added', data);
+
                 // Save posts to local storage
                 localStorage.setItem('posts', JSON.stringify(this.posts));
 
@@ -51,6 +55,9 @@ const app = new Vue({
                 // Remove the post from the posts array
                 this.posts.splice(index, 1);
 
+                // Emit 'post-deleted' event to the server
+                socket.emit('post-deleted', postId);
+
                 // Save posts to local storage
                 localStorage.setItem('posts', JSON.stringify(this.posts));
             })
@@ -70,6 +77,22 @@ const app = new Vue({
         },
         closeImagePreview() {
             this.showImagePreview = false;
+        },
+    },
+    created() {
+        // Listen for 'post-added' event
+        socket.on('post-added', (newPost) => {
+            // Handle the received new post
+            console.log('Received new post:', newPost);
+            // Update your Vue data or perform other actions here
+        });
+
+        // Listen for 'post-deleted' event
+        socket.on('post-deleted', (deletedPostId) => {
+            // Handle the received deleted post ID
+            console.log('Received deleted post ID:', deletedPostId);
+            // Update your Vue data or perform other actions here
+        });
         },
     },
 });
