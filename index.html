@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Relo</title>
+</head>
+<body>
+
+<div id="app">
+    <div id="board">
+        <div v-for="(post, index) in posts" class="post">
+            <p v-if="post.comment">{{ post.comment }}</p>
+            <img v-if="post.imageUrl" :src="serverUrl + post.imageUrl" alt="Posted Image">
+            <div class="post-actions">
+                <button @click="deletePost(index)">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="form">
+        <textarea v-model="commentInput" placeholder="Add your comment..."></textarea>
+        <input type="file" @change="handleImageUpload" accept="image/*">
+        <button @click="postComment">Post</button>
+    </div>
+    
+    <!-- Add this div for the image preview overlay -->
+    <div id="image-preview-overlay" v-if="showImagePreview">
+        <button @click="closeImagePreview" class="close-button">X</button>
+        <img :src="imagePreview" alt="Selected Image Preview">
+    </div>
+    
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+<script src="script.js"></script>
+
+</body>
+</html>
