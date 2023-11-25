@@ -1,3 +1,0 @@
-"scripts": {
-  "build": "copyfiles index.html script.js styles.css public"
-}
